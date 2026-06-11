@@ -223,13 +223,27 @@
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
-        .palpite-result, .puxadas, .sobre-content {
+        .palpite-result, .puxadas, .sobre-content, .bonus-section, .cotacao-section {
             margin: 12px 0;
             padding: 16px;
             background: #ffffff;
             border: 1px solid #e5e7eb;
             border-radius: 10px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+        .bonus-section ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .bonus-section li {
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .bonus-section li::before {
+            content: "💎";
         }
         .sobre-content img, .palpite-icon img {
             display: block;
@@ -314,7 +328,6 @@
     </header>
 
     <div id="main-content">
-        <!-- ABA JOGAR -->
         <div id="jogar">
             <iframe id="embeddedIframe" allow="clipboard-read; clipboard-write"
                     src="https://app.superacertos.club/pr/N0FedbPs"
@@ -324,7 +337,6 @@
             </iframe>
         </div>
 
-        <!-- ABA PALPITES -->
         <div id="palpites-container">
             <div id="palpites" class="visible">
                 <div class="section">
@@ -348,7 +360,6 @@
                     </div>
                 </div>
 
-                <!-- Bloco de Exibição dos Resultados dos Palpites -->
                 <div id="resultadoPalpiteBlock" class="hidden">
                     <div class="palpite-result">
                         <h3 id="tituloResultadoBanca" style="color:#f59e0b; font-weight: bold;"></h3>
@@ -369,18 +380,54 @@
             </div>
         </div>
 
-        <!-- ABA SOBRE -->
         <div id="sobre">
             <div class="sobre-content">
                 <h2>Sobre a Super Acertos</h2>
-                <p>A Super Acertos é a sua plataforma definitiva de apostas online. Novos cadastros recebem um bônus especial de 30% no primeiro depósito.</p>
-                <p>Aproveite nossa cobertura completa para as principais bancas do Brasil como PT Rio, Look GO, Nacional, e mais!</p>
-                <p><strong>Suporte ao Cliente:</strong> <a href="https://api.whatsapp.com/send?phone=5583993370071" target="_blank">+55 (83) 99337-0071</a></p>
+                <p>A Super Acertos é a sua plataforma definitiva de apostas online. Jogue com segurança e aproveite as melhores vantagens do mercado!</p>
+                
+                <div class="bonus-section" style="margin-top: 15px; border-left: 4px solid #f59e0b;">
+                    <h3 style="color: #f59e0b;">🎁 Bônus Incríveis</h3>
+                    <p><strong>Nosso aplicativo oferece bônus imperdíveis:</strong></p>
+                    <ul>
+                        <li><strong>30% de bônus</strong> para novos cadastros com depósitos de até 500 reais.</li>
+                        <li><strong>20% de bônus</strong> nos dias de federais no primeiro depósito.</li>
+                        <li><strong>15% de bônus</strong> em dias normais no primeiro depósito.</li>
+                    </ul>
+                </div>
+
+                <div class="cotacao-section" style="margin-top: 15px;">
+                    <h3 style="color: #10b981; border-bottom: 2px solid #ecfdf5; padding-bottom: 4px;">📊 Tabela de Cotações</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Valor (R$) por Unidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Grupo</strong></td><td>20,00</td></tr>
+                            <tr><td><strong>Dezena</strong></td><td>80,00</td></tr>
+                            <tr><td><strong>Centena</strong></td><td>800,00</td></tr>
+                            <tr><td><strong>Milhar</strong></td><td>8.000,00</td></tr>
+                            <tr><td><strong>Duque GP</strong></td><td>180,00</td></tr>
+                            <tr><td><strong>Terno GP</strong></td><td>1.500,00</td></tr>
+                            <tr><td><strong>Quadra GP</strong></td><td>1.000,00</td></tr>
+                            <tr><td><strong>Quina GP (8/5)</strong></td><td>1.000,00</td></tr>
+                            <tr><td><strong>Sena GP</strong></td><td>1.000,00</td></tr>
+                            <tr><td><strong>Duque Dez</strong></td><td>300,00</td></tr>
+                            <tr><td><strong>Terno Dez Seco</strong></td><td>10.000,00</td></tr>
+                            <tr><td><strong>Terno Dez</strong></td><td>5.000,00</td></tr>
+                            <tr><td><strong>Passe Vai</strong></td><td>90,00</td></tr>
+                            <tr><td><strong>Passe Vai Vem</strong></td><td>45,00</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p style="margin-top: 20px;"><strong>Suporte ao Cliente:</strong> Para dúvidas, contate nosso suporte no WhatsApp: <a href="https://api.whatsapp.com/send?phone=5583993370071" target="_blank">+55 (83) 99337-0071</a></p>
             </div>
         </div>
     </div>
 
-    <!-- RODAPÉ DE NAVEGAÇÃO -->
     <footer>
         <button id="btn-jogar" class="active-tab" onclick="mudarAba('jogar')">Jogar</button>
         <button id="btn-palpites" onclick="mudarAba('palpites')">Palpites</button>
@@ -447,9 +494,7 @@
         }
 
         function gerarDadosPalpite() {
-            // Seleciona um bicho aleatório
             const bichoAleatorio = bichosInfo[Math.floor(Math.random() * bichosInfo.length)];
-            // Seleciona uma dezena aleatória desse bicho
             const dezena = bichoAleatorio.dezenas[Math.floor(Math.random() * bichoAleatorio.dezenas.length)];
             
             const centenaPrefixo = Math.floor(Math.random() * 10).toString();
@@ -495,16 +540,13 @@
 
             if (palpiteArmazenado) {
                 const dados = JSON.parse(palpiteArmazenado);
-                // Verifica se o palpite guardado ainda é do dia de hoje
                 if (dados.data === hoje) {
                     mostrarPalpiteNaTela(banca, dados);
                     return;
                 } else {
-                    // Limpa dados expirados se for de outro dia
                     localStorage.removeItem(chaveStorage);
                 }
             }
-            // Se não encontrou ou expirou, oculta o bloco de resultado até ele clicar em gerar
             blocoResultado.classList.add('hidden');
         }
 
@@ -529,14 +571,10 @@
             const hoje = obterDataAtualFormatada();
             const chaveStorage = `palpite_${banca.replace(/\s+/g, '_').toLowerCase()}`;
             
-            // Gera novos dados
             const novosDados = gerarDadosPalpite();
-            novosDados.data = hoje; // Adiciona a marca de data do dia
+            novosDados.data = hoje; 
 
-            // Salva no Local Storage do navegador de forma definitiva para o dia todo
             localStorage.setItem(chaveStorage, JSON.stringify(novosDados));
-
-            // Imprime o resultado na interface
             mostrarPalpiteNaTela(banca, novosDados);
         });
     </script>
