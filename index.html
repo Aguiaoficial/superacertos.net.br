@@ -204,6 +204,14 @@
         button.brown:hover {
             background: #6B3A0F;
         }
+        button.whatsapp-suporte {
+            background: #25d366;
+            color: #fff;
+            margin-top: 15px;
+        }
+        button.whatsapp-suporte:hover {
+            background: #128c7e;
+        }
         button:disabled {
             background: #d1d5db;
             cursor: not-allowed;
@@ -306,6 +314,11 @@
             background: #fef2f2;
             border-radius: 6px;
         }
+        .list-palpites {
+            font-weight: bold;
+            color: #374151;
+            letter-spacing: 1px;
+        }
         @media (max-width: 768px) {
             #palpites-container, #sobre {
                 padding: 12px;
@@ -365,17 +378,21 @@
                         <h3 id="tituloResultadoBanca" style="color:#f59e0b; font-weight: bold;"></h3>
                         <p style="font-size: 11px; color: #777; margin-bottom: 12px;">Palpites válidos para o dia de hoje.</p>
                         <table>
-                            <tr><th>Tipo</th><th>Palpite</th></tr>
-                            <tr><td><strong>Milhar</strong></td><td id="resMilhar">-</td></tr>
-                            <tr><td><strong>Centena</strong></td><td id="resCentena">-</td></tr>
-                            <tr><td><strong>Dezena</strong></td><td id="resDezena">-</td></tr>
-                            <tr><td><strong>Grupo</strong></td><td id="resGrupo">-</td></tr>
+                            <tr><th>Tipo</th><th>Palpites Gerados</th></tr>
+                            <tr><td><strong>5 Milhares</strong></td><td id="resMilhar" class="list-palpites">-</td></tr>
+                            <tr><td><strong>5 Centenas</strong></td><td id="resCentena" class="list-palpites">-</td></tr>
+                            <tr><td><strong>2 Dezenas</strong></td><td id="resDezena" class="list-palpites">-</td></tr>
+                            <tr><td><strong>Grupo Principal</strong></td><td id="resGrupo">-</td></tr>
                         </table>
                     </div>
                     <div class="puxadas">
                         <h3 style="color: #10b981;">Puxadas do Dia (Bicho Forte)</h3>
                         <p id="resPuxadaTexto">-</p>
                     </div>
+                    
+                    <button class="whatsapp-suporte" onclick="window.open('https://api.whatsapp.com/send?phone=5583993370071', '_blank')">
+                        💬 Falar com Suporte no WhatsApp
+                    </button>
                 </div>
             </div>
         </div>
@@ -424,6 +441,9 @@
                 </div>
 
                 <p style="margin-top: 20px;"><strong>Suporte ao Cliente:</strong> Para dúvidas, contate nosso suporte no WhatsApp: <a href="https://api.whatsapp.com/send?phone=5583993370071" target="_blank">+55 (83) 99337-0071</a></p>
+                <button class="whatsapp-suporte" onclick="window.open('https://api.whatsapp.com/send?phone=5583993370071', '_blank')">
+                    💬 Iniciar Conversa no WhatsApp
+                </button>
             </div>
         </div>
     </div>
@@ -435,7 +455,7 @@
     </footer>
 
     <script>
-        // Mapeamento de Grupos do Jogo do Bicho e suas Puxadas para enriquecer o palpite
+        // Mapeamento de Grupos do Jogo do Bicho e suas Puxadas
         const bichosInfo = [
             { grupo: "01", nome: "Avestruz", dezenas: ["01","02","03","04"], puxa: "Águia, Burro, Jacaré" },
             { grupo: "02", nome: "Águia", dezenas: ["05","06","07","08"], puxa: "Avestruz, Galo, Pavão" },
@@ -488,24 +508,47 @@
             }
         }
 
-        // Funções Auxiliares para Geração de Palpites Válidos
-        function formatarNumero(num, tamanho) {
-            return num.toString().padStart(tamanho, '0');
+        // Funções para Geração de Palpites Dinâmicos (Múltiplos itens)
+        function sortearBichoEDezena() {
+            const bicho = bichosInfo[Math.floor(Math.random() * bichosInfo.length)];
+            const dezena = bicho.dezenas[Math.floor(Math.random() * bicho.dezenas.length)];
+            return { bicho, dezena };
         }
 
         function gerarDadosPalpite() {
-            const bichoAleatorio = bichosInfo[Math.floor(Math.random() * bichosInfo.length)];
-            const dezena = bichoAleatorio.dezenas[Math.floor(Math.random() * bichoAleatorio.dezenas.length)];
-            
-            const centenaPrefixo = Math.floor(Math.random() * 10).toString();
-            const milharPrefixo = Math.floor(Math.random() * 10).toString();
+            let milhares = [];
+            let centenas = [];
+            let dezenas = [];
+
+            // Gerar 5 milhares completas
+            for (let i = 0; i < 5; i++) {
+                const { dezena } = sortearBichoEDezena();
+                const prefixo = Math.floor(10 + Math.random() * 90).toString(); // 2 dígitos aleatórios
+                milhares.push(prefixo + dezena);
+            }
+
+            // Gerar 5 centenas completas
+            for (let i = 0; i < 5; i++) {
+                const { dezena } = sortearBichoEDezena();
+                const prefixo = Math.floor(Math.random() * 10).toString(); // 1 dígito aleatório
+                centenas.push(prefixo + dezena);
+            }
+
+            // Gerar 2 dezenas completas
+            for (let i = 0; i < 2; i++) {
+                const { dezena } = sortearBichoEDezena();
+                dezenas.push(dezena);
+            }
+
+            // Define o Grupo Principal do Dia baseado no primeiro palpite
+            const bichoBase = bichosInfo[Math.floor(Math.random() * bichosInfo.length)];
 
             return {
-                milhar: milharPrefixo + centenaPrefixo + dezena,
-                centena: centenaPrefixo + dezena,
-                dezena: dezena,
-                grupo: `${bichoAleatorio.grupo} - ${bichoAleatorio.nome}`,
-                puxada: `${bichoAleatorio.nome} puxa -> ${bichoAleatorio.puxa}`
+                milhar: milhares.join(' - '),
+                centena: centenas.join(' - '),
+                dezena: dezenas.join(' - '),
+                grupo: `${bichoBase.grupo} - ${bichoBase.nome}`,
+                puxada: `${bichoBase.nome} puxa -> ${bichoBase.puxa}`
             };
         }
 
@@ -514,13 +557,11 @@
             return `${data.getFullYear()}-${data.getMonth() + 1}-${data.getDate()}`;
         }
 
-        // Elementos da Interface
         const bancaSelect = document.getElementById('bancaSelect');
         const btnGerar = document.getElementById('gerarPalpites');
         const bancaError = document.getElementById('bancaError');
         const blocoResultado = document.getElementById('resultadoPalpiteBlock');
 
-        // Ativa/Desativa o botão conforme seleção da banca
         bancaSelect.addEventListener('change', function() {
             if (this.value !== "") {
                 btnGerar.removeAttribute('disabled');
@@ -532,7 +573,6 @@
             }
         });
 
-        // Gerenciamento de Armazenamento e Exibição
         function carregarOuExibirPalpite(banca) {
             const hoje = obterDataAtualFormatada();
             const chaveStorage = `palpite_${banca.replace(/\s+/g, '_').toLowerCase()}`;
@@ -551,7 +591,7 @@
         }
 
         function mostrarPalpiteNaTela(banca, dados) {
-            document.getElementById('tituloResultadoBanca').innerText = `Palpite para ${banca}`;
+            document.getElementById('tituloResultadoBanca').innerText = `Palpites para ${banca}`;
             document.getElementById('resMilhar').innerText = dados.milhar;
             document.getElementById('resCentena').innerText = dados.centena;
             document.getElementById('resDezena').innerText = dados.dezena;
@@ -560,7 +600,6 @@
             blocoResultado.classList.remove('hidden');
         }
 
-        // Evento de Clique no botão Gerar Palpites
         btnGerar.addEventListener('click', function() {
             const banca = bancaSelect.value;
             if (!banca) {
